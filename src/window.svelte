@@ -1,8 +1,20 @@
 <script lang="ts">
-    import { windowStore } from "./store/windowStore";
+    import {writable} from "svelte/store"
+
+    const windowStore = createCustom();
+
+    function createCustom() {
+        const s = writable({x: 0, y: 0});
+        return {
+            subscribe: s.subscribe,
+            set: (x, y) => s.set({x: x, y: y}),
+        }
+    }
 
     let isMouseDown = false;
 
+    export let startPosition: MouseMoveData;
+    setStartPosition(startPosition); 
     let startOffset = {
         offsetX: 0,
         offsetY: 0
@@ -37,10 +49,14 @@
         isMouseDown = false;
     }
 
+    function setStartPosition(startPosition: MouseMoveData) {
+        windowStore.set(startPosition.clientX, startPosition.clientY);
+    }
+
 </script>
   
-<div class="window" style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`} on:mousedown={mouseDown} on:mouseup={mouseUp} on:mousemove={moveWindow} on:mouseleave={mouseUp}>
-    <div class="top-panel" >
+<div class="window" style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`}>
+    <div class="top-panel"  on:mousedown={mouseDown} on:mouseup={mouseUp} on:mousemove={moveWindow} on:mouseleave={mouseUp}>
         <div class="title">title</div>
         <div class="buttons">
             <button>X</button>
@@ -57,6 +73,7 @@
         background-color: #2a94cd;
         padding: 6px;
         position: absolute;
+        border: 1px solid white;
     }
 
     .top-panel {

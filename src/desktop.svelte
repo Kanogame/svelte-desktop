@@ -3,7 +3,11 @@
 </script>
   
 <div class="root">
-    <Window>
+    <Window startPosition={{clientX: 100, clientY: 100}}>
+
+    </Window>
+
+    <Window startPosition={{clientX: 0, clientY: 0}}>
 
     </Window>
 </div>
