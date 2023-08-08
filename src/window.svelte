@@ -3,18 +3,33 @@
 
     let isMouseDown = false;
 
-    type MouseData = {
+    let startOffset = {
+        offsetX: 0,
+        offsetY: 0
+    }
+
+    type MouseMoveData = {
         clientX: number;
         clientY: number;
+        
     };
 
-    function moveWindow(ev: MouseData) {
+    type MouseClickData = {
+        offsetX: number;
+        offsetY: number;
+    }
+
+    function moveWindow(ev: MouseMoveData) {
         if (isMouseDown) {
-            windowStore.set(ev.clientX, ev.clientY);
+            windowStore.set(ev.clientX - startOffset.offsetX, ev.clientY - startOffset.offsetY);
         }
     }
 
-    function mouseDown() {
+    function mouseDown(ev: MouseClickData) {
+        startOffset = {
+            offsetX: ev.offsetX,
+            offsetY: ev.offsetY
+        }
         isMouseDown = true;
     }
 
@@ -24,8 +39,8 @@
 
 </script>
   
-<div class="window" on:mousedown={mouseDown} on:mouseup={mouseUp} on:mousemove={moveWindow} on:mouseleave={mouseUp} style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`}>
-    <div class="top-panel">
+<div class="window" style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`} on:mousedown={mouseDown} on:mouseup={mouseUp} on:mousemove={moveWindow} on:mouseleave={mouseUp}>
+    <div class="top-panel" >
         <div class="title">title</div>
         <div class="buttons">
             <button>X</button>
