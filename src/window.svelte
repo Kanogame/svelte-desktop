@@ -1,7 +1,30 @@
 <script lang="ts">
+    import { windowStore } from "./store/windowStore";
+
+    let isMouseDown = false;
+
+    type MouseData = {
+        clientX: number;
+        clientY: number;
+    };
+
+    function moveWindow(ev: MouseData) {
+        if (isMouseDown) {
+            windowStore.set(ev.clientX, ev.clientY);
+        }
+    }
+
+    function mouseDown() {
+        isMouseDown = true;
+    }
+
+    function mouseUp() {
+        isMouseDown = false;
+    }
+
 </script>
   
-<div class="window">
+<div class="window" on:mousedown={mouseDown} on:mouseup={mouseUp} on:mousemove={moveWindow} on:mouseleave={mouseUp} style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`}>
     <div class="top-panel">
         <div class="title">title</div>
         <div class="buttons">
@@ -11,7 +34,6 @@
         </div>
     </div>
     <div class="window-content">
-
     </div>
 </div>
   
