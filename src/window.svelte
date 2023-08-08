@@ -12,18 +12,32 @@
     }
 
     let isMouseDown = false;
-
-    export let startPosition: MouseMoveData;
-    setStartPosition(startPosition); 
+    enum ResizeState {
+        none = 0,
+        top,
+        cornerTopRight,
+        right,
+        cornerBottomRight, 
+        bottom,
+        cornerBottomLeft,
+        left,
+        cornerTopLeft,
+    };
+    
+    export let startPosition: BarMouseMoveData;
+    let windowSize = {
+        SizeX: 200,
+        SizeY: 200, 
+    };
+    setWindowStartPosition(startPosition); 
     let startOffset = {
         offsetX: 0,
         offsetY: 0
     }
 
-    type MouseMoveData = {
+    type BarMouseMoveData = {
         clientX: number;
         clientY: number;
-        
     };
 
     type MouseClickData = {
@@ -31,13 +45,31 @@
         offsetY: number;
     }
 
-    function moveWindow(ev: MouseMoveData) {
+    type MouseMoveData = {
+        clientX: number;
+        clientY: number;
+        offsetX: number;
+        offsetY: number;
+    };
+
+    function windowMouseWindow(ev: MouseClickData) {
+        let padding = 6;
+        let bar = 40
+        if (ev.offsetX < padding || ev.offsetX > windowSize.SizeX + padding) {
+            
+        }
+        if (ev.offsetY < padding || ev.offsetY > windowSize.SizeX + padding + bar) {
+            console.log("padding");
+        }
+    }
+
+    function barMoveWindow(ev: BarMouseMoveData) {
         if (isMouseDown) {
             windowStore.set(ev.clientX - startOffset.offsetX, ev.clientY - startOffset.offsetY);
         }
     }
 
-    function mouseDown(ev: MouseClickData) {
+    function barMouseDown(ev: MouseClickData) {
         startOffset = {
             offsetX: ev.offsetX,
             offsetY: ev.offsetY
@@ -45,18 +77,18 @@
         isMouseDown = true;
     }
 
-    function mouseUp() {
+    function barMouseUp() {
         isMouseDown = false;
     }
 
-    function setStartPosition(startPosition: MouseMoveData) {
+    function setWindowStartPosition(startPosition: BarMouseMoveData) {
         windowStore.set(startPosition.clientX, startPosition.clientY);
     }
 
 </script>
   
-<div class="window" style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`}>
-    <div class="top-panel"  on:mousedown={mouseDown} on:mouseup={mouseUp} on:mousemove={moveWindow} on:mouseleave={mouseUp}>
+<div class="window" style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`} on:mousemove={windowMouseWindow}>
+    <div class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseleave={barMouseUp}>
         <div class="title">title</div>
         <div class="buttons">
             <button>X</button>
