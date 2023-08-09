@@ -1,9 +1,10 @@
 <script lang="ts">
     import {writable} from "svelte/store"
 
-    const windowStore = createCustom();
+    const windowPositionStore = createWindowPositionStore();
+    const windowResizeStore = createWindowResizeStore();
 
-    function createCustom() {
+    function createWindowPositionStore() {
         const s = writable({x: 0, y: 0});
         return {
             subscribe: s.subscribe,
@@ -11,7 +12,43 @@
         }
     }
 
+    function createWindowResizeStore() {
+        const s = writable({width: 200, height: 200});
+        return {
+            subscribe: s.subscribe,
+            set: (width, height) => s.set({width: width, height: height}),
+        }
+    }
+    let windowSize: Size;
+    windowResizeStore.subscribe((data) => {windowSize = data;})
+
+    let windowPos = {x: 0, y: 0};
+    windowPositionStore.subscribe((data) => {windowPos = data;})
+
+    type Size = {
+        width: number;
+        height: number;
+    };
+
+    type BarMouseMoveData = {
+    clientX: number;
+    clientY: number;
+    };
+
+    type MouseClickData = {
+        offsetX: number;
+        offsetY: number;
+    }
+
+    type MouseMoveData = {
+        clientX: number;
+        clientY: number;
+        offsetX: number;
+        offsetY: number;
+    }
+
     let isMouseDown = false;
+    let windowResizeState : ResizeState;
     enum ResizeState {
         none = 0,
         top,
@@ -25,47 +62,64 @@
     };
     
     export let startPosition: BarMouseMoveData;
-    let windowSize = {
-        SizeX: 200,
-        SizeY: 200, 
-    };
     setWindowStartPosition(startPosition); 
     let startOffset = {
         offsetX: 0,
         offsetY: 0
     }
 
-    type BarMouseMoveData = {
-        clientX: number;
-        clientY: number;
-    };
+    let isRMouseDown= false;
 
-    type MouseClickData = {
-        offsetX: number;
-        offsetY: number;
-    }
-
-    type MouseMoveData = {
-        clientX: number;
-        clientY: number;
-        offsetX: number;
-        offsetY: number;
-    };
-
-    function windowMouseWindow(ev: MouseClickData) {
+    function windowResizeWindow(ev: MouseMoveData) {
         let padding = 6;
         let bar = 40
-        if (ev.offsetX < padding || ev.offsetX > windowSize.SizeX + padding) {
-            
+        console.log(ev);
+        if (windowResizeState == ResizeState.none) {
+            return
         }
-        if (ev.offsetY < padding || ev.offsetY > windowSize.SizeX + padding + bar) {
-            console.log("padding");
+        isRMouseDown = !isRMouseDown;
+        if (windowResizeState == ResizeState.cornerBottomRight) {
+        }
+    }
+
+    function windowMousePaddingHover(ev: MouseMoveData) {
+        let padding = 6;
+        let bar = 40
+        if (ev.offsetX < padding) {
+            if (ev.offsetY < padding) {
+                windowResizeState = ResizeState.cornerTopLeft;
+            } else if ( ev.offsetY > windowSize.height + padding + bar) {
+                windowResizeState = ResizeState.cornerBottomLeft;
+            } else {
+                windowResizeState = ResizeState.left;
+            }
+        } else if (ev.offsetX > windowSize.width + padding) {
+            if (ev.offsetY < padding) {
+                windowResizeState = ResizeState.cornerTopRight;
+            } else if ( ev.offsetY > windowSize.height + padding + bar) {
+                windowResizeState = ResizeState.cornerBottomRight;
+            } else {
+                windowResizeState = ResizeState.right;
+            }
+        } else {
+            if (ev.offsetY < padding) {
+                windowResizeState = ResizeState.top;
+            } else if ( ev.offsetY > windowSize.height + padding + bar) {
+                windowResizeState = ResizeState.bottom;
+            } else {
+                windowResizeState = ResizeState.none;
+            }
+        }
+
+        if (isRMouseDown) {
+            windowResizeStore.set(ev.clientX - windowPos.x - padding, ev.clientY - windowPos.y - bar - padding);
+            console.log(ev);
         }
     }
 
     function barMoveWindow(ev: BarMouseMoveData) {
         if (isMouseDown) {
-            windowStore.set(ev.clientX - startOffset.offsetX, ev.clientY - startOffset.offsetY);
+            windowPositionStore.set(ev.clientX - startOffset.offsetX, ev.clientY - startOffset.offsetY);
         }
     }
 
@@ -78,16 +132,17 @@
     }
 
     function barMouseUp() {
+        console.log("up");
         isMouseDown = false;
     }
 
     function setWindowStartPosition(startPosition: BarMouseMoveData) {
-        windowStore.set(startPosition.clientX, startPosition.clientY);
+        windowPositionStore.set(startPosition.clientX, startPosition.clientY);
     }
 
 </script>
   
-<div class="window" style:left={`${$windowStore.x}px`} style:top={`${$windowStore.y}px`} on:mousemove={windowMouseWindow}>
+<div class="window" style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} on:mousemove={windowMousePaddingHover} on:mousedown={windowResizeWindow}>
     <div class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseleave={barMouseUp}>
         <div class="title">title</div>
         <div class="buttons">
@@ -96,7 +151,7 @@
             <button>M</button>
         </div>
     </div>
-    <div class="window-content">
+    <div class="window-content" style:height={`${$windowResizeStore.height}px`} style:width={`${$windowResizeStore.width}px`}>
     </div>
 </div>
   
