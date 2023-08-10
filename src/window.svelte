@@ -90,6 +90,17 @@
         } else if  (windowResizeState == ResizeState.top) {
             windowPositionStore.set(windowPos.x, mouseData.clientY - padding);
             windowResizeStore.set(windowSize.width, tempTop - mouseData.clientY);
+        } else if (windowResizeState == ResizeState.cornerTopLeft) {
+            windowPositionStore.set(mouseData.clientX - padding, mouseData.clientY - padding);
+            windowResizeStore.set(tempLeft - mouseData.clientX, tempTop - mouseData.clientY);
+        } else if (windowResizeState == ResizeState.cornerTopRight) {
+            windowPositionStore.set(windowPos.x, mouseData.clientY - padding);
+            windowResizeStore.set(mouseData.clientX - windowPos.x - padding, tempTop - mouseData.clientY);
+        } else if (windowResizeState == ResizeState.cornerBottomLeft) {
+            windowPositionStore.set(mouseData.clientX - padding, windowPos.y);
+            windowResizeStore.set(tempLeft - mouseData.clientX, mouseData.clientY - windowPos.y - bar - padding);
+        } else if (windowResizeState == ResizeState.cornerBottomRight) {
+            windowResizeStore.set(mouseData.clientX - windowPos.x - padding, mouseData.clientY - windowPos.y - bar - padding);
         }
     }
 
