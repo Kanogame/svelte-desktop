@@ -85,35 +85,42 @@
     function windowMousePaddingHover(ev: MouseMoveData) {
         let padding = 6;
         let bar = 40
-        if (ev.offsetX < padding) {
-            if (ev.offsetY < padding) {
-                windowResizeState = ResizeState.cornerTopLeft;
-            } else if ( ev.offsetY > windowSize.height + padding + bar) {
-                windowResizeState = ResizeState.cornerBottomLeft;
+        if (!isRMouseDown) {
+            if (ev.offsetX < padding) {
+                if (ev.offsetY < padding) {
+                    windowResizeState = ResizeState.cornerTopLeft;
+                } else if ( ev.offsetY > windowSize.height + padding + bar) {
+                    windowResizeState = ResizeState.cornerBottomLeft;
+                } else {
+                    windowResizeState = ResizeState.left;
+                }
+            } else if (ev.offsetX > windowSize.width + padding) {
+                if (ev.offsetY < padding) {
+                    windowResizeState = ResizeState.cornerTopRight;
+                } else if ( ev.offsetY > windowSize.height + padding + bar) {
+                    windowResizeState = ResizeState.cornerBottomRight;
+                } else {
+                    windowResizeState = ResizeState.right;
+                }
             } else {
-                windowResizeState = ResizeState.left;
-            }
-        } else if (ev.offsetX > windowSize.width + padding) {
-            if (ev.offsetY < padding) {
-                windowResizeState = ResizeState.cornerTopRight;
-            } else if ( ev.offsetY > windowSize.height + padding + bar) {
-                windowResizeState = ResizeState.cornerBottomRight;
-            } else {
-                windowResizeState = ResizeState.right;
-            }
-        } else {
-            if (ev.offsetY < padding) {
-                windowResizeState = ResizeState.top;
-            } else if ( ev.offsetY > windowSize.height + padding + bar) {
-                windowResizeState = ResizeState.bottom;
-            } else {
-                windowResizeState = ResizeState.none;
+                if (ev.offsetY < padding) {
+                    windowResizeState = ResizeState.top;
+                } else if ( ev.offsetY > windowSize.height + padding + bar) {
+                    windowResizeState = ResizeState.bottom;
+                } else {
+                    windowResizeState = ResizeState.none;
+                }
             }
         }
 
         if (isRMouseDown) {
-            windowResizeStore.set(ev.clientX - windowPos.x - padding, ev.clientY - windowPos.y - bar - padding);
-            console.log(ev);
+            if (windowResizeState == ResizeState.right) {
+                windowResizeStore.set(ev.clientX - windowPos.x - padding, windowSize.height);
+                console.log(windowResizeState);
+            } else if (windowResizeState == ResizeState.bottom){
+                windowResizeStore.set(windowSize.width, ev.clientY - windowPos.y - bar - padding);
+            }
+            //windowResizeStore.set(ev.clientX - windowPos.x - padding, ev.clientY - windowPos.y - bar - padding);
         }
     }
 
