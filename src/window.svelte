@@ -83,6 +83,7 @@
     }
 
     let tempLeft: number;
+    let tempTop: number;
 
     function windowMousePaddingHover(ev: MouseMoveData) {
         let padding = 6;
@@ -108,6 +109,7 @@
             } else {
                 if (ev.offsetY < padding) {
                     windowResizeState = ResizeState.top;
+                    tempTop = windowPos.y + windowSize.height + padding;
                 } else if ( ev.offsetY > windowSize.height + padding + bar) {
                     windowResizeState = ResizeState.bottom;
                 } else {
@@ -125,6 +127,9 @@
             } else if (windowResizeState == ResizeState.left) {
                 windowPositionStore.set(ev.clientX - padding, windowPos.y);
                 windowResizeStore.set(tempLeft - ev.clientX, windowSize.height);
+            } else if  (windowResizeState == ResizeState.top) {
+                windowPositionStore.set(windowPos.x, ev.clientY - padding);
+                windowResizeStore.set(windowSize.width, tempTop - ev.clientY);
             }
             //windowResizeStore.set(ev.clientX - windowPos.x - padding, ev.clientY - windowPos.y - bar - padding);
         }
