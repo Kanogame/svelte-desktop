@@ -131,7 +131,7 @@
 
     function barMoveWindow(ev: BarMouseMoveData) {
         if (isMouseDown) {
-            windowPositionStore.set(ev.clientX - startOffset.offsetX, ev.clientY - startOffset.offsetY);
+            windowPositionStore.set(ev.clientX - startOffset.offsetX - padding, ev.clientY - startOffset.offsetY - padding);
         }
     }
 
