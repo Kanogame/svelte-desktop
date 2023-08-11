@@ -1,6 +1,6 @@
 <script lang="ts">
     import {writable} from "svelte/store"
-    import {createWindowPositionStore, createWindowResizeStore} from "./store/windowStore";
+    import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
     import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData} from "./utils/types";
     import {ResizeState} from "./utils/types";
 
@@ -11,6 +11,7 @@
 
     const windowPositionStore = createWindowPositionStore();
     const windowResizeStore = createWindowResizeStore(StartWindowWidth, StartWindowHeight);
+    const cursorStore = createCursorStore();
     let windowResizeState : ResizeState;
     let isMouseDown = false;
     let isRMouseDown = false;
@@ -56,28 +57,37 @@
         if (mouseData.offsetX < padding) {
             if (mouseData.offsetY < padding) {
                 windowResizeState = ResizeState.cornerTopLeft;
+                cursorStore.set("nw-resize");
             } else if ( mouseData.offsetY > windowSize.height + padding + bar) {
                 windowResizeState = ResizeState.cornerBottomLeft;
+                cursorStore.set("sw-resize");
             } else {
                 windowResizeState = ResizeState.left;
+                cursorStore.set("w-resize");
                 tempLeft = windowPos.x + windowSize.width + padding;
             }
         } else if (mouseData.offsetX > windowSize.width + padding) {
             if (mouseData.offsetY < padding) {
                 windowResizeState = ResizeState.cornerTopRight;
+                cursorStore.set("ne-resize")
             } else if ( mouseData.offsetY > windowSize.height + padding + bar) {
                 windowResizeState = ResizeState.cornerBottomRight;
+                cursorStore.set("se-resize");
             } else {
                 windowResizeState = ResizeState.right;
+                cursorStore.set("w-resize");
             }
         } else {
             if (mouseData.offsetY < padding) {
                 windowResizeState = ResizeState.top;
+                cursorStore.set("n-resize");
                 tempTop = windowPos.y + windowSize.height + padding;
             } else if ( mouseData.offsetY > windowSize.height + padding + bar) {
                 windowResizeState = ResizeState.bottom;
+                cursorStore.set("n-resize");
             } else {
                 windowResizeState = ResizeState.none;
+                cursorStore.set("default");
             }
         }
     }
@@ -131,10 +141,12 @@
             offsetY: ev.offsetY
         }
         isMouseDown = true;
+        cursorStore.set("move");
     }
 
     function barMouseUp() {
         isMouseDown = false;
+        cursorStore.set("default");
     }
 
     function setWindowStartPosition(startPosition: BarMouseMoveData) {
@@ -142,9 +154,8 @@
     }
 
 </script>
-  
-<div class="window" style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} on:mousemove={windowMousePaddingHover} on:mousedown={windowResizeWindow}>
-    <div class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseleave={barMouseUp}>
+<div aria-hidden="true" class="window" style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousemove={windowMousePaddingHover} on:mousedown={windowResizeWindow}>
+    <div aria-hidden="true" class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseleave={barMouseUp}>
         <div class="title">title</div>
         <div class="buttons">
             <button>X</button>
@@ -162,7 +173,7 @@
         padding: 6px;
         position: absolute;
         border: 1px solid white;
-        cursor: w-resize;
+        cursor:default;
     }
 
     .top-panel {

@@ -8,10 +8,19 @@ export function createWindowPositionStore() {
     }
 }
 
-export function createWindowResizeStore() {
-    const s = writable({width: 200, height: 200});
+export function createWindowResizeStore(startWidth: number, startHeight: number) {
+    const s = writable({width: startWidth, height: startHeight});
     return {
         subscribe: s.subscribe,
         set: (width, height) => s.set({width: width, height: height}),
+    }
+}
+
+
+export function createCursorStore() {
+    const s = writable({cursor: "default"});
+    return {
+        subscribe: s.subscribe,
+        set: (cursor) => s.set({cursor: cursor}),
     }
 }
