@@ -4,10 +4,16 @@
     import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData} from "./utils/types";
     import {ResizeState} from "./utils/types";
 
+    export let StartWindowHeight: number;
+    export let StartWindowWidth: number;
+    export let startPosition: BarMouseMoveData;
+    export let isResizable: boolean = false;
+
     const windowPositionStore = createWindowPositionStore();
-    const windowResizeStore = createWindowResizeStore();
+    const windowResizeStore = createWindowResizeStore(StartWindowWidth, StartWindowHeight);
     let windowResizeState : ResizeState;
     let isMouseDown = false;
+    let isRMouseDown = false;
     let tempLeft: number;
     let tempTop: number;
     const padding = 6;
@@ -18,15 +24,12 @@
 
     let windowPos = {x: 0, y: 0};
     windowPositionStore.subscribe((data) => {windowPos = data;})
-    
-    export let startPosition: BarMouseMoveData;
+
     setWindowStartPosition(startPosition); 
     let startOffset = {
         offsetX: 0,
         offsetY: 0
     }
-
-    let isRMouseDown= false;
 
     function windowResizeWindow(ev: MouseMoveData) {
         console.log(ev);
@@ -38,8 +41,6 @@
         }
     }
 
-    
-
     function windowMousePaddingHover(ev: MouseMoveData) {
         if (isRMouseDown) {
             resizeWindow(windowResizeState, ev);
@@ -49,6 +50,9 @@
     }
 
     function checkWindowPadding(mouseData: MouseMoveData) {
+        if (!isResizable) {
+            return;
+        }
         if (mouseData.offsetX < padding) {
             if (mouseData.offsetY < padding) {
                 windowResizeState = ResizeState.cornerTopLeft;
@@ -79,6 +83,9 @@
     }
 
     function resizeWindow(windowResizeState: ResizeState, mouseData: MouseMoveData) {
+        if (!isResizable) {
+            return;
+        }
         switch (windowResizeState) {
             case ResizeState.right: 
                 windowResizeStore.set(mouseData.clientX - windowPos.x - padding, windowSize.height);
@@ -155,6 +162,7 @@
         padding: 6px;
         position: absolute;
         border: 1px solid white;
+        cursor: w-resize;
     }
 
     .top-panel {
