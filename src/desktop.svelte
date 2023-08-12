@@ -9,7 +9,7 @@
 </script>
   
 <div class="root">
-    <Window startPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true}, getZindex={getZindex}>
+    <Window startPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex}>
 
     </Window>
 
