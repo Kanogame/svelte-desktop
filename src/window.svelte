@@ -8,11 +8,13 @@
     export let StartWindowWidth: number;
     export let startPosition: BarMouseMoveData;
     export let isResizable: boolean = false;
+    export let getZindex: Function;
 
     const windowPositionStore = createWindowPositionStore();
     const windowResizeStore = createWindowResizeStore(StartWindowWidth, StartWindowHeight);
     const cursorStore = createCursorStore();
     let windowResizeState : ResizeState;
+    let zIndex: number = 1;
     let isMouseDown = false;
     let isRMouseDown = false;
     let tempLeft: number;
@@ -141,6 +143,7 @@
             offsetY: ev.offsetY
         }
         isMouseDown = true;
+        zIndex = getZindex();
         cursorStore.set("move");
     }
 
@@ -154,7 +157,7 @@
     }
 
 </script>
-<div aria-hidden="true" class="window" style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousemove={windowMousePaddingHover} on:mousedown={windowResizeWindow}>
+<div aria-hidden="true" class="window" style:z-index={`${zIndex}`} style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousemove={windowMousePaddingHover} on:mousedown={windowResizeWindow}>
     <div aria-hidden="true" class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseleave={barMouseUp}>
         <div class="title">title</div>
         <div class="buttons">
