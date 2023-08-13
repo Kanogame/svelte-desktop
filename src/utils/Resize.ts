@@ -2,13 +2,15 @@ import type { Size, MouseMoveData, WindowData } from "./Types";
 import { ResizeState } from "./Types";
 
 export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowData, set: (name: any)=> void) : ResizeState {
+    let tempLeft = 0;
+    let tempTop = 0;
     if (mouseData.offsetX < WindowData.padding) {
         if (mouseData.offsetY < WindowData.padding) {
             return setState(ResizeState.cornerTopLeft, "nw-resize", set);
         } else if ( mouseData.offsetY > WindowData.windowSize.height + WindowData.padding + WindowData.bar) {
             return setState(ResizeState.cornerBottomLeft, "sw-resize", set);
         } else {
-            //tempLeft = windowPos.x + windowSize.width + padding;
+            tempLeft = WindowData.windowPos.x + WindowData.windowSize.width + WindowData.padding;
             return setState(ResizeState.left, "w-resize", set);
         }
     } else if (mouseData.offsetX > WindowData.windowSize.width + WindowData.padding) {
@@ -21,7 +23,7 @@ export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowD
         }
     } else {
         if (mouseData.offsetY < WindowData.padding) {
-            //tempTop = windowPos.y + windowSize.height + padding;
+            tempTop = WindowData.windowPos.y + WindowData.windowSize.height + WindowData.padding;
             return setState(ResizeState.top, "n-resize", set);
         } else if (mouseData.offsetY > WindowData.windowSize.height + WindowData.padding + WindowData.bar) {
             return setState(ResizeState.bottom, "n-resize", set);

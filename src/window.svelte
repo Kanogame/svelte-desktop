@@ -43,12 +43,7 @@
         isRMouseDown = true;
     }
 
-    let WindowData: WindowData = {
-        windowPos: $windowPositionStore,
-        windowSize: $windowResizeStore,
-        padding: 6,
-        bar: 40,
-    } 
+    let WindowData: WindowData;
 
     $: WindowData = {
         windowPos: $windowPositionStore,
@@ -66,6 +61,7 @@
                 ResizeWindow(windowResizeState, ev, WindowData, tempLeft, tempTop, windowResizeStore.set, windowPositionStore.set);
             } else {
                 windowResizeState = CheckWindowPadding(ev, WindowData, cursorStore.set);
+                //console.log(data);
             }
         }
     }
