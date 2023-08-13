@@ -1,8 +1,8 @@
 <script lang="ts">
     import {writable} from "svelte/store"
     import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
-    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData} from "./utils/types";
-    import {ResizeState} from "./utils/types";
+    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData} from "./utils/Types";
+    import {ResizeState} from "./utils/Types";
 
     export let StartWindowHeight: number;
     export let StartWindowWidth: number;
@@ -44,47 +44,7 @@
         }
     }
 
-    function checkWindowPadding(mouseData: MouseMoveData) {
-        if (!isResizable) {
-            return;
-        }
-        if (mouseData.offsetX < padding) {
-            if (mouseData.offsetY < padding) {
-                windowResizeState = ResizeState.cornerTopLeft;
-                cursorStore.set("nw-resize");
-            } else if ( mouseData.offsetY > windowSize.height + padding + bar) {
-                windowResizeState = ResizeState.cornerBottomLeft;
-                cursorStore.set("sw-resize");
-            } else {
-                windowResizeState = ResizeState.left;
-                cursorStore.set("w-resize");
-                tempLeft = windowPos.x + windowSize.width + padding;
-            }
-        } else if (mouseData.offsetX > windowSize.width + padding) {
-            if (mouseData.offsetY < padding) {
-                windowResizeState = ResizeState.cornerTopRight;
-                cursorStore.set("ne-resize")
-            } else if ( mouseData.offsetY > windowSize.height + padding + bar) {
-                windowResizeState = ResizeState.cornerBottomRight;
-                cursorStore.set("se-resize");
-            } else {
-                windowResizeState = ResizeState.right;
-                cursorStore.set("w-resize");
-            }
-        } else {
-            if (mouseData.offsetY < padding) {
-                windowResizeState = ResizeState.top;
-                cursorStore.set("n-resize");
-                tempTop = windowPos.y + windowSize.height + padding;
-            } else if ( mouseData.offsetY > windowSize.height + padding + bar) {
-                windowResizeState = ResizeState.bottom;
-                cursorStore.set("n-resize");
-            } else {
-                windowResizeState = ResizeState.none;
-                cursorStore.set("default");
-            }
-        }
-    }
+    
 
     function resizeWindow(windowResizeState: ResizeState, mouseData: MouseMoveData) {
         if (!isResizable) {
