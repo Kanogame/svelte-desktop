@@ -40,10 +40,17 @@
         if (windowResizeState == ResizeState.none) {
             return
         }
-        isRMouseDown = !isRMouseDown;
+        isRMouseDown = true;
     }
 
     let WindowData: WindowData = {
+        windowPos: $windowPositionStore,
+        windowSize: $windowResizeStore,
+        padding: 6,
+        bar: 40,
+    } 
+
+    $: WindowData = {
         windowPos: $windowPositionStore,
         windowSize: $windowResizeStore,
         padding: 6,
@@ -75,6 +82,7 @@
 
     function barMouseUp() {
         isMouseDown = false;
+        isRMouseDown = false;
         cursorStore.set("default");
     }
 
