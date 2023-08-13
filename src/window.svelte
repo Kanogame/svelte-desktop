@@ -1,8 +1,9 @@
 <script lang="ts">
     import {writable} from "svelte/store"
     import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
-    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData} from "./utils/Types";
+    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowData} from "./utils/Types";
     import {ResizeState} from "./utils/Types";
+    import {CheckWindowPadding, ResizeWindow} from "./utils/Resize";
 
     export let StartWindowHeight: number;
     export let StartWindowWidth: number;
@@ -40,19 +41,25 @@
             return
         }
         isRMouseDown = !isRMouseDown;
-        if (windowResizeState == ResizeState.cornerBottomRight) {
-        }
     }
+
+    let WindowData: WindowData = {
+        windowPos: $windowPositionStore,
+        windowSize: $windowResizeStore,
+        padding: 6,
+        bar: 40,
+    } 
 
     function barMoveWindow(ev: MouseMoveData) {
         if (isMouseDown) {
             windowPositionStore.set(ev.clientX - startOffset.offsetX - padding, ev.clientY - startOffset.offsetY - padding);
         }
-
-        if (isRMouseDown) {
-            resizeWindow(windowResizeState, ev);
-        } else {
-            checkWindowPadding(ev);
+        if (isResizable) {
+            if (isRMouseDown) {
+                ResizeWindow(windowResizeState, ev, WindowData, tempLeft, tempTop, windowResizeStore.set, windowPositionStore.set);
+            } else {
+                windowResizeState = CheckWindowPadding(ev, WindowData, cursorStore.set);
+            }
         }
     }
 
