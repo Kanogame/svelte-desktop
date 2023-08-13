@@ -29,4 +29,16 @@ export enum ResizeState {
     cornerBottomLeft,
     left,
     cornerTopLeft,
-};
+}
+
+export type Point = {
+    x: number;
+    y: number;
+}
+
+export type WindowData = {
+    windowPos: Point;
+    windowSize: Size; 
+    padding: number; 
+    bar: number;
+}

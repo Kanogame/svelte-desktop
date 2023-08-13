@@ -44,45 +44,6 @@
         }
     }
 
-    
-
-    function resizeWindow(windowResizeState: ResizeState, mouseData: MouseMoveData) {
-        if (!isResizable) {
-            return;
-        }
-        switch (windowResizeState) {
-            case ResizeState.right: 
-                windowResizeStore.set(mouseData.clientX - windowPos.x - padding, windowSize.height);
-                break;
-            case ResizeState.bottom: 
-                windowResizeStore.set(windowSize.width, mouseData.clientY - windowPos.y - bar - padding);
-                break;
-            case ResizeState.left: 
-                windowPositionStore.set(mouseData.clientX - padding, windowPos.y);
-                windowResizeStore.set(tempLeft - mouseData.clientX, windowSize.height);
-                break;
-            case ResizeState.top:
-                windowPositionStore.set(windowPos.x, mouseData.clientY - padding);
-                windowResizeStore.set(windowSize.width, tempTop - mouseData.clientY);
-                break;
-            case ResizeState.cornerTopLeft:
-                windowPositionStore.set(mouseData.clientX - padding, mouseData.clientY - padding);
-                windowResizeStore.set(tempLeft - mouseData.clientX, tempTop - mouseData.clientY);
-                break;
-            case ResizeState.cornerTopRight:
-                windowPositionStore.set(windowPos.x, mouseData.clientY - padding);
-                windowResizeStore.set(mouseData.clientX - windowPos.x - padding, tempTop - mouseData.clientY);
-                break;
-            case ResizeState.cornerBottomLeft:
-                windowPositionStore.set(mouseData.clientX - padding, windowPos.y);
-                windowResizeStore.set(tempLeft - mouseData.clientX, mouseData.clientY - windowPos.y - bar - padding);
-                break;
-            case ResizeState.cornerBottomRight:
-                windowResizeStore.set(mouseData.clientX - windowPos.x - padding, mouseData.clientY - windowPos.y - bar - padding);
-                break;
-        }
-    }
-
     function barMoveWindow(ev: MouseMoveData) {
         if (isMouseDown) {
             windowPositionStore.set(ev.clientX - startOffset.offsetX - padding, ev.clientY - startOffset.offsetY - padding);

@@ -1,4 +1,4 @@
-import type { Size, MouseMoveData } from "./Types";
+import type { Size, MouseMoveData, WindowData } from "./Types";
 import { ResizeState } from "./Types";
 
 function checkWindowPadding(windowResizeState: ResizeState, mouseData: MouseMoveData, padding: number, bar: number, windowSize: Size, set: (name: string)=> {}) : ResizeState {
@@ -34,4 +34,38 @@ function checkWindowPadding(windowResizeState: ResizeState, mouseData: MouseMove
 function setState(windowResizeState: ResizeState, name: string, set: (name: string)=> {}) : ResizeState {
     set(name);
     return windowResizeState;
+}
+
+function resizeWindow(windowResizeState: ResizeState, mouseData: MouseMoveData, WindowData: WindowData, tempLeft: number, tempTop: number, resizeSet: (width: number, height: number)=> {}, posSet: (width: number, height: number)=> {}) {
+    switch (windowResizeState) {
+        case ResizeState.right: 
+            resizeSet(mouseData.clientX - WindowData.windowPos.x - WindowData.padding, WindowData.windowSize.height);
+            break;
+        case ResizeState.bottom: 
+            resizeSet(WindowData.windowSize.width, mouseData.clientY - WindowData.windowPos.y - WindowData.bar - WindowData.padding);
+            break;
+        case ResizeState.left: 
+            posSet(mouseData.clientX - WindowData.padding, WindowData.windowPos.y);
+            resizeSet(tempLeft - mouseData.clientX, WindowData.windowSize.height);
+            break;
+        case ResizeState.top:
+            posSet(WindowData.windowPos.x, mouseData.clientY - WindowData.padding);
+            resizeSet(WindowData.windowSize.width, tempTop - mouseData.clientY);
+            break;
+        case ResizeState.cornerTopLeft:
+            posSet(mouseData.clientX - WindowData.padding, mouseData.clientY - WindowData.padding);
+            resizeSet(tempLeft - mouseData.clientX, tempTop - mouseData.clientY);
+            break;
+        case ResizeState.cornerTopRight:
+            posSet(WindowData.windowPos.x, mouseData.clientY - WindowData.padding);
+            resizeSet(mouseData.clientX - WindowData.windowPos.x - WindowData.padding, tempTop - mouseData.clientY);
+            break;
+        case ResizeState.cornerBottomLeft:
+            posSet(mouseData.clientX - WindowData.padding, WindowData.windowPos.y);
+            resizeSet(tempLeft - mouseData.clientX, mouseData.clientY - WindowData.windowPos.y - WindowData.bar - WindowData.padding);
+            break;
+        case ResizeState.cornerBottomRight:
+            resizeSet(mouseData.clientX - WindowData.windowPos.x - WindowData.padding, mouseData.clientY - WindowData.windowPos.y - WindowData.bar - WindowData.padding);
+            break;
+    }
 }
