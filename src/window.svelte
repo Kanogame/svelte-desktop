@@ -6,7 +6,7 @@
 
     export let StartWindowHeight: number;
     export let StartWindowWidth: number;
-    export let startPosition: BarMouseMoveData;
+    export let StartPosition: BarMouseMoveData;
     export let isResizable: boolean = false;
     export let getZindex: Function;
 
@@ -28,7 +28,7 @@
     let windowPos = {x: 0, y: 0};
     windowPositionStore.subscribe((data) => {windowPos = data;})
 
-    setWindowStartPosition(startPosition); 
+    setWindowStartPosition(StartPosition); 
     let startOffset = {
         offsetX: 0,
         offsetY: 0
@@ -158,7 +158,7 @@
 
 </script>
 <div aria-hidden="true" class="window" style:z-index={`${zIndex}`} style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousemove={windowMousePaddingHover} on:mousedown={windowResizeWindow}>
-    <div aria-hidden="true" class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseleave={barMouseUp}>
+    <div aria-hidden="true" class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseup={barMouseUp}>
         <div class="title">title</div>
         <div class="buttons">
             <button>X</button>
@@ -169,6 +169,8 @@
     <div class="window-content" style:height={`${$windowResizeStore.height}px`} style:width={`${$windowResizeStore.width}px`}>
     </div>
 </div>
+
+<svelte:window on:mouseup={barMouseUp} on:mousemove={barMoveWindow} />
   
 <style>
     .window {
@@ -177,6 +179,7 @@
         position: absolute;
         border: 1px solid white;
         cursor:default;
+        user-select:none;
     }
 
     .top-panel {
