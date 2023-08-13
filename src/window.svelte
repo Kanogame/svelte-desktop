@@ -44,14 +44,6 @@
         }
     }
 
-    function windowMousePaddingHover(ev: MouseMoveData) {
-        if (isRMouseDown) {
-            resizeWindow(windowResizeState, ev);
-        } else {
-            checkWindowPadding(ev);
-        }
-    }
-
     function checkWindowPadding(mouseData: MouseMoveData) {
         if (!isResizable) {
             return;
@@ -131,9 +123,15 @@
         }
     }
 
-    function barMoveWindow(ev: BarMouseMoveData) {
+    function barMoveWindow(ev: MouseMoveData) {
         if (isMouseDown) {
             windowPositionStore.set(ev.clientX - startOffset.offsetX - padding, ev.clientY - startOffset.offsetY - padding);
+        }
+
+        if (isRMouseDown) {
+            resizeWindow(windowResizeState, ev);
+        } else {
+            checkWindowPadding(ev);
         }
     }
 
@@ -157,8 +155,8 @@
     }
 
 </script>
-<div aria-hidden="true" class="window" style:z-index={`${zIndex}`} style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousemove={windowMousePaddingHover} on:mousedown={windowResizeWindow}>
-    <div aria-hidden="true" class="top-panel" on:mousedown={barMouseDown} on:mouseup={barMouseUp} on:mousemove={barMoveWindow} on:mouseup={barMouseUp}>
+<div aria-hidden="true" class="window" style:z-index={`${zIndex}`} style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousedown={windowResizeWindow}>
+    <div aria-hidden="true" class="top-panel" on:mousedown={barMouseDown}>
         <div class="title">title</div>
         <div class="buttons">
             <button>X</button>
