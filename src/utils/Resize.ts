@@ -1,36 +1,46 @@
 import type { Size, MouseMoveData, WindowData } from "./Types";
 import { ResizeState } from "./Types";
 
-export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowData, set: (name: any)=> void) : ResizeState {
+export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowData, set: (name: any)=> void) : {state: ResizeState, tempLeft: number, tempTop: number} {
     let tempLeft = 0;
     let tempTop = 0;
     if (mouseData.offsetX < WindowData.padding) {
+        tempLeft = calcTempLeft(WindowData);
         if (mouseData.offsetY < WindowData.padding) {
-            return setState(ResizeState.cornerTopLeft, "nw-resize", set);
+            tempTop = calcTempTop(WindowData);
+            return {state: setState(ResizeState.cornerTopLeft, "nw-resize", set), tempLeft, tempTop}
         } else if ( mouseData.offsetY > WindowData.windowSize.height + WindowData.padding + WindowData.bar) {
-            return setState(ResizeState.cornerBottomLeft, "sw-resize", set);
+            return {state: setState(ResizeState.cornerBottomLeft, "sw-resize", set), tempLeft, tempTop}
         } else {
-            tempLeft = WindowData.windowPos.x + WindowData.windowSize.width + WindowData.padding;
-            return setState(ResizeState.left, "w-resize", set);
+            return {state: setState(ResizeState.left, "w-resize", set), tempLeft, tempTop}
         }
     } else if (mouseData.offsetX > WindowData.windowSize.width + WindowData.padding) {
         if (mouseData.offsetY < WindowData.padding) {
-            return setState(ResizeState.cornerTopRight, "ne-resize", set);
+            tempTop = calcTempTop(WindowData);
+            return {state: setState(ResizeState.cornerTopRight, "ne-resize", set), tempLeft, tempTop}
         } else if ( mouseData.offsetY > WindowData.windowSize.height + WindowData.padding + WindowData.bar) {
-            return setState(ResizeState.cornerBottomRight, "se-resize", set);
+            return {state: setState(ResizeState.cornerBottomRight, "se-resize", set), tempLeft, tempTop}
         } else {
-            return setState(ResizeState.right, "w-resize", set);
+            return {state: setState(ResizeState.right, "w-resize", set), tempLeft, tempTop}
         }
     } else {
         if (mouseData.offsetY < WindowData.padding) {
-            tempTop = WindowData.windowPos.y + WindowData.windowSize.height + WindowData.padding;
-            return setState(ResizeState.top, "n-resize", set);
+            tempTop = calcTempTop(WindowData);
+            return {state: setState(ResizeState.top, "n-resize", set), tempLeft, tempTop}
         } else if (mouseData.offsetY > WindowData.windowSize.height + WindowData.padding + WindowData.bar) {
-            return setState(ResizeState.bottom, "n-resize", set);
+            return {state: setState(ResizeState.bottom, "n-resize", set), tempLeft, tempTop}
         } else {
-            return setState(ResizeState.none, "default", set);
+            return {state: setState(ResizeState.none, "default", set), tempLeft, tempTop}
         }
     }
+}
+
+function calcTempTop(WindowData: WindowData) {
+    return WindowData.windowPos.y + WindowData.windowSize.height + WindowData.padding;
+}
+
+function calcTempLeft(WindowData: WindowData) {
+    return WindowData.windowPos.x + WindowData.windowSize.width + WindowData.padding;
 }
 
 function setState(windowResizeState: ResizeState, name: string, set: (name: any)=> void) : ResizeState {

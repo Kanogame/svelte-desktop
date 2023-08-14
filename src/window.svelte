@@ -60,8 +60,10 @@
             if (isRMouseDown) {
                 ResizeWindow(windowResizeState, ev, WindowData, tempLeft, tempTop, windowResizeStore.set, windowPositionStore.set);
             } else {
-                windowResizeState = CheckWindowPadding(ev, WindowData, cursorStore.set);
-                //console.log(data);
+                let data = CheckWindowPadding(ev, WindowData, cursorStore.set);
+                windowResizeState = data.state;
+                tempLeft = data.tempLeft;
+                tempTop = data.tempTop;
             }
         }
     }
