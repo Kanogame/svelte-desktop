@@ -2,8 +2,10 @@
     import {writable} from "svelte/store"
     import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
     import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowData} from "./utils/Types";
-    import {ResizeState} from "./utils/Types";
     import {CheckWindowPadding, ResizeWindow} from "./utils/Resize";
+    import {ResizeState} from "./utils/Types";
+    import WindowBar from "./WindowBar.svelte";
+    import WindowContent from "./WindowContent.svelte";
 
     export let StartWindowHeight: number;
     export let StartWindowWidth: number;
@@ -90,16 +92,8 @@
 
 </script>
 <div aria-hidden="true" class="window" style:z-index={`${zIndex}`} style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousedown={windowResizeWindow}>
-    <div aria-hidden="true" class="top-panel" on:mousedown={barMouseDown}>
-        <div class="title">title</div>
-        <div class="buttons">
-            <button>X</button>
-            <button>F</button>
-            <button>M</button>
-        </div>
-    </div>
-    <div class="window-content" style:height={`${$windowResizeStore.height}px`} style:width={`${$windowResizeStore.width}px`}>
-    </div>
+    <WindowBar on:mousedown={barMouseDown}/>
+    <WindowContent windowResizeData={$windowResizeStore}/>
 </div>
 
 <svelte:window on:mouseup={barMouseUp} on:mousemove={barMoveWindow} />
@@ -119,11 +113,5 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-    }
-
-    .window-content {
-        background-color: white;
-        width: 200px;
-        height: 200px;
     }
 </style>

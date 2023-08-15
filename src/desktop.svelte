@@ -1,5 +1,5 @@
 <script lang="ts">
-      import Window from './window.svelte';
+      import Window from './Window.svelte';
 
       let zIndex: number = 1;
 
