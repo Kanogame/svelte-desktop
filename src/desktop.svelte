@@ -17,7 +17,7 @@
             title: "testButton",
         }],
         blocks: [{
-            Position: {x: 20, y: 30},
+            Position: {x: 50, y: 70},
             FontSize: 17,
             title: "testButton",
     }]

@@ -1,11 +1,12 @@
 <script lang="ts">
     import type {WindowContentData} from "./utils/Types";
     export let windowResizeData;
-    export let Content;
+    export let Content: WindowContentData;
 </script>
 
 
 <div class="window-content" style:height={`${windowResizeData.height}px`} style:width={`${windowResizeData.width}px`}>
+    {#if Content}
     {#each Content.buttons as item}
 		<button class="window-el" style:width={`${item.Width}px`} style:height={`${item.Height}px`} 
         style:left={`${item.Position.x}px`} style:top={`${item.Position.y}px`}>{item.title}</button>
@@ -15,6 +16,7 @@
 		<p class="window-el" style:font-size={`${item.FontSize}px`}
         style:left={`${item.Position.x}px`} style:top={`${item.Position.y}px`}>{item.title}</p>
 	{/each}
+    {/if}
 </div>
 
 <style> 
