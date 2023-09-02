@@ -41,4 +41,22 @@ export type WindowData = {
     windowSize: Size; 
     padding: number; 
     bar: number;
+} 
+
+export type WindowContent = {
+    buttons: [];
+    blocks: [];
+}
+
+type Button = {
+    Position: Point;
+    ButtonW: number;
+    ButtonH: number;
+    title: string;
+}
+
+type Text = {
+    Position: Point;
+    FontSize: number;
+    title: string;
 }
