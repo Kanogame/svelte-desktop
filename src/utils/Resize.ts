@@ -1,4 +1,4 @@
-import type { Size, MouseMoveData, WindowData } from "./Types";
+import type { Size, MouseMoveData, WindowData, WindowContentData } from "./Types";
 import { ResizeState } from "./Types";
 
 export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowData, set: (name: any)=> void) : {state: ResizeState, tempLeft: number, tempTop: number} {
@@ -80,4 +80,29 @@ export function ResizeWindow(windowResizeState: ResizeState, mouseData: MouseMov
             resizeSet(mouseData.clientX - WindowData.windowPos.x - WindowData.padding, mouseData.clientY - WindowData.windowPos.y - WindowData.bar - WindowData.padding);
             break;
     }
+}
+
+export function CalculateMinimalSize(Content: WindowContentData): Size {
+    if (Content == null) {
+        return {width: 0, height: 0};
+    }
+    let MaxWidht: number = Number.MIN_VALUE, MaxHeight: number = Number.MIN_VALUE;
+    for (const el of Content.buttons) {
+        if (el.Width + el.Position.x > MaxWidht) {
+            MaxWidht = el.Width + el.Position.x; 
+        } 
+        if (el.Height + el.Position.y > MaxHeight) {
+            MaxHeight = el.Height + el.Position.y; 
+        }
+    }
+    for (const el of Content.blocks) {
+        if (el.Position.x > MaxWidht) {
+            MaxWidht = el.Position.x; 
+        } 
+        if (el.Position.y > MaxHeight) {
+            MaxHeight = el.Position.y; 
+        }
+    }
+
+    return {width: MaxWidht, height: MaxHeight};
 }

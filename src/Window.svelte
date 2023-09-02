@@ -1,7 +1,7 @@
 <script lang="ts">
     import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
     import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowData, WindowContentData} from "./utils/Types";
-    import {CheckWindowPadding, ResizeWindow} from "./utils/Resize";
+    import {CheckWindowPadding, ResizeWindow, CalculateMinimalSize} from "./utils/Resize";
     import {ResizeState} from "./utils/Types";
     import WindowBar from "./WindowBar.svelte";
     import WindowContent from "./WindowContent.svelte";
@@ -15,6 +15,7 @@
 
     const windowPositionStore = createWindowPositionStore();
     const windowResizeStore = createWindowResizeStore(StartWindowWidth, StartWindowHeight);
+    const MinimalSize = CalculateMinimalSize(Content);
     const cursorStore = createCursorStore();
     let windowResizeState : ResizeState;
     let zIndex: number = 1;
@@ -38,7 +39,6 @@
     }
 
     function windowResizeWindow(ev: MouseMoveData) {
-        console.log(ev);
         if (windowResizeState == ResizeState.none) {
             return
         }
@@ -54,19 +54,24 @@
         bar: 40,
     } 
 
+    $: if ($windowResizeStore.width <= MinimalSize.width) {windowResizeStore.set(MinimalSize.width + 1, $windowResizeStore.height)};
+
+    $: if ($windowResizeStore.height <= MinimalSize.height) {windowResizeStore.set($windowResizeStore.width, MinimalSize.height + 100)};
+
     function barMoveWindow(ev: MouseMoveData) {
         if (isMouseDown) {
             windowPositionStore.set(ev.clientX - startOffset.offsetX - padding, ev.clientY - startOffset.offsetY - padding);
         }
-        if (isResizable) {
-            if (isRMouseDown) {
-                ResizeWindow(windowResizeState, ev, WindowData, tempLeft, tempTop, windowResizeStore.set, windowPositionStore.set);
-            } else {
-                let data = CheckWindowPadding(ev, WindowData, cursorStore.set);
-                windowResizeState = data.state;
-                tempLeft = data.tempLeft;
-                tempTop = data.tempTop;
-            }
+        if (!isResizable) {
+            return;
+        }
+        if (isRMouseDown) {
+            ResizeWindow(windowResizeState, ev, WindowData, tempLeft, tempTop, windowResizeStore.set, windowPositionStore.set);
+        } else {
+            let data = CheckWindowPadding(ev, WindowData, cursorStore.set);
+            windowResizeState = data.state;
+            tempLeft = data.tempLeft;
+            tempTop = data.tempTop;
         }
     }
 
