@@ -1,7 +1,6 @@
 <script lang="ts">
-    import {writable} from "svelte/store"
     import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
-    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowData} from "./utils/Types";
+    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowData, WindowContentData} from "./utils/Types";
     import {CheckWindowPadding, ResizeWindow} from "./utils/Resize";
     import {ResizeState} from "./utils/Types";
     import WindowBar from "./WindowBar.svelte";
@@ -12,6 +11,7 @@
     export let StartPosition: BarMouseMoveData;
     export let isResizable: boolean = false;
     export let getZindex: Function;
+    export let Content: WindowContentData = null;
 
     const windowPositionStore = createWindowPositionStore();
     const windowResizeStore = createWindowResizeStore(StartWindowWidth, StartWindowHeight);
@@ -90,10 +90,11 @@
         windowPositionStore.set(startPosition.clientX, startPosition.clientY);
     }
 
+
 </script>
 <div aria-hidden="true" class="window" style:z-index={`${zIndex}`} style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousedown={windowResizeWindow}>
     <WindowBar on:mousedown={barMouseDown}/>
-    <WindowContent windowResizeData={$windowResizeStore}/>
+    <WindowContent windowResizeData={$windowResizeStore} Content={Content}/>
 </div>
 
 <svelte:window on:mouseup={barMouseUp} on:mousemove={barMoveWindow} />
@@ -106,12 +107,5 @@
         border: 1px solid white;
         cursor:default;
         user-select:none;
-    }
-
-    .top-panel {
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
     }
 </style>

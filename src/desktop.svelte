@@ -1,15 +1,31 @@
 <script lang="ts">
-      import Window from './Window.svelte';
+    import Window from './Window.svelte';
+    import type {WindowContentData, Button, Text} from "./utils/Types";
 
       let zIndex: number = 1;
 
       function getZindex() {
         return zIndex++;
       }
+
+
+    let content: WindowContentData = {
+        buttons: [{
+            Position: {x: 20, y: 30},
+            Height: 30,
+            Width: 40,
+            title: "testButton",
+        }],
+        blocks: [{
+            Position: {x: 20, y: 30},
+            FontSize: 17,
+            title: "testButton",
+    }]
+    };
 </script>
   
 <div class="root">
-    <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex}>
+    <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={content}>
 
     </Window>
 

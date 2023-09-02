@@ -43,19 +43,19 @@ export type WindowData = {
     bar: number;
 } 
 
-export type WindowContent = {
-    buttons: [];
-    blocks: [];
+export type WindowContentData = {
+    buttons: Button[];
+    blocks: Text[];
 }
 
-type Button = {
+export type Button = {
     Position: Point;
-    ButtonW: number;
-    ButtonH: number;
+    Height: number;
+    Width: number;
     title: string;
 }
 
-type Text = {
+export type Text = {
     Position: Point;
     FontSize: number;
     title: string;
