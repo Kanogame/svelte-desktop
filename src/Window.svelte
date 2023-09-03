@@ -54,9 +54,9 @@
         bar: 40,
     } 
 
-    $: if ($windowResizeStore.width <= MinimalSize.width) {windowResizeStore.set(MinimalSize.width + 1, $windowResizeStore.height)};
+    $: if ($windowResizeStore.width <= MinimalSize.width + 30) {windowResizeStore.set(MinimalSize.width + 30, $windowResizeStore.height)};
 
-    $: if ($windowResizeStore.height <= MinimalSize.height) {windowResizeStore.set($windowResizeStore.width, MinimalSize.height + 100)};
+    $: if ($windowResizeStore.height <= MinimalSize.height + 30) {windowResizeStore.set($windowResizeStore.width, MinimalSize.height + 30); console.log("1233")};
 
     function barMoveWindow(ev: MouseMoveData) {
         if (isMouseDown) {
