@@ -49,6 +49,7 @@ export type WindowContentData = {
 }
 
 export type Button = {
+    id: number;
     Position: Point;
     Height: number;
     Width: number;
@@ -56,6 +57,7 @@ export type Button = {
 }
 
 export type Text = {
+    id: number;
     Position: Point;
     FontSize: number;
     title: string;

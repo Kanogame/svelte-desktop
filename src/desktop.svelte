@@ -1,22 +1,31 @@
 <script lang="ts">
     import Window from './Window.svelte';
+    import {Initialize} from "./api/start";
     import type {WindowContentData, Button, Text} from "./utils/Types";
 
-      let zIndex: number = 1;
+    let zIndex: number = 1;
 
-      function getZindex() {
-        return zIndex++;
-      }
+    function getZindex() {
+    return zIndex++;
+    }
+
+    const socket = Initialize();
+
+    socket.addEventListener("message", () => {
+        
+    });
 
 
     let content: WindowContentData = {
         buttons: [{
+            id: 1,
             Position: {x: 20, y: 30},
             Height: 30,
             Width: 40,
             title: "testButton",
         }],
         blocks: [{
+            id: 2,
             Position: {x: 50, y: 70},
             FontSize: 17,
             title: "testButton",
