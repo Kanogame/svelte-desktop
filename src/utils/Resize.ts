@@ -1,7 +1,7 @@
-import type { Size, MouseMoveData, WindowData, WindowContentData } from "./Types";
-import { ResizeState } from "./Types";
+import type { Size, MouseMoveData, WindowArgs, WindowContentData } from "./WindowTypes";
+import { ResizeState } from "./WindowTypes";
 
-export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowData, set: (name: any)=> void) : {state: ResizeState, tempLeft: number, tempTop: number} {
+export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowArgs, set: (name: any)=> void) : {state: ResizeState, tempLeft: number, tempTop: number} {
     let tempLeft = 0;
     let tempTop = 0;
     if (mouseData.offsetX < WindowData.padding) {
@@ -35,11 +35,11 @@ export function CheckWindowPadding(mouseData: MouseMoveData, WindowData: WindowD
     }
 }
 
-function calcTempTop(WindowData: WindowData) {
+function calcTempTop(WindowData: WindowArgs) {
     return WindowData.windowPos.y + WindowData.windowSize.height + WindowData.padding;
 }
 
-function calcTempLeft(WindowData: WindowData) {
+function calcTempLeft(WindowData: WindowArgs) {
     return WindowData.windowPos.x + WindowData.windowSize.width + WindowData.padding;
 }
 
@@ -48,7 +48,7 @@ function setState(windowResizeState: ResizeState, name: string, set: (name: any)
     return windowResizeState;
 }
 
-export function ResizeWindow(windowResizeState: ResizeState, mouseData: MouseMoveData, WindowData: WindowData, tempLeft: number, tempTop: number, resizeSet: (width: any, height: any)=> void, posSet: (x: any, y: any)=> void) {
+export function ResizeWindow(windowResizeState: ResizeState, mouseData: MouseMoveData, WindowData: WindowArgs, tempLeft: number, tempTop: number, resizeSet: (width: any, height: any)=> void, posSet: (x: any, y: any)=> void) {
     switch (windowResizeState) {
         case ResizeState.right: 
             resizeSet(mouseData.clientX - WindowData.windowPos.x - WindowData.padding, WindowData.windowSize.height);
