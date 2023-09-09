@@ -1,8 +1,8 @@
 <script lang="ts">
     import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
-    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowData, WindowContentData} from "./utils/Types";
+    import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowArgs, WindowContentData} from "./utils/WindowTypes";
     import {CheckWindowPadding, ResizeWindow, CalculateMinimalSize} from "./utils/Resize";
-    import {ResizeState} from "./utils/Types";
+    import {ResizeState} from "./utils/WindowTypes";
     import WindowBar from "./WindowBar.svelte";
     import WindowContent from "./WindowContent.svelte";
 
@@ -45,7 +45,7 @@
         isRMouseDown = true;
     }
 
-    let WindowData: WindowData;
+    let WindowData: WindowArgs;
 
     $: WindowData = {
         windowPos: $windowPositionStore,

@@ -1,4 +1,5 @@
 import {writable} from "svelte/store"
+import type { WindowData } from "../utils/WindowTypes";
 
 export function createWindowPositionStore() {
     const s = writable({x: 0, y: 0});
@@ -22,5 +23,17 @@ export function createCursorStore() {
     return {
         subscribe: s.subscribe,
         set: (cursor) => s.set({cursor: cursor}),
+    }
+}
+
+export const DesktopStore = createDesktopStore();
+
+function createDesktopStore() {
+    const s = writable<WindowData[]>([]);
+    return {
+        subscribe: s.subscribe,
+        addWindow: (val: WindowData) => s.update(v => [...v, val]),
+        removeWindow: (Id: number) => s.update(v => v.filter((window) => window.id != Id)),
+        //todo: clear, changeWindow
     }
 }
