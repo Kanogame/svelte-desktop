@@ -55,8 +55,15 @@
 
     let id: number = 1;
 
+    let InpId: string;
+
     function getId() {
         return id++;
+    }
+
+    function remove() {
+        console.log(+InpId);
+        DesktopStore.removeWindow(+InpId);
     }
 
     function add() {
@@ -66,6 +73,8 @@
   
 <div class="root">
     <button on:click={add}>add</button>
+    <input type="text" bind:value={InpId}/>
+    <button on:click={remove}>remove</button>
     {#each Desktop as window (window.id)}
     <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
     {/each}
