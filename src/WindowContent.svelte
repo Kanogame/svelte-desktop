@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {WindowContentData} from "./utils/Types";
+    import type {WindowContentData} from "./utils/WindowTypes";
     export let windowResizeData;
     export let Content: WindowContentData;
 </script>
