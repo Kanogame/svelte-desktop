@@ -1,20 +1,41 @@
 <script lang="ts">
     import Window from './Window.svelte';
     import {Initialize} from "./api/start";
-    import type {WindowContentData, Button, Text} from "./utils/Types";
+    import type {WindowContentData, Button, Text, WindowData} from "./utils/WindowTypes";
+    import { DesktopStore } from './store/windowStore';
+    //import type {Event} from "./utils/EventTypes";
 
     let zIndex: number = 1;
 
     function getZindex() {
     return zIndex++;
     }
-
+/*
     const socket = Initialize();
 
-    socket.addEventListener("message", () => {
-        
+    socket.addEventListener("message", (e) => {
+        switch (e.data.type) {
+            case "event":
+                EventManager(e.data.payload);
+                break;
+        }
     });
 
+    function ResolveEvent(event: any) {
+        // todo send resolve
+    }
+
+    function EventManager(data: Event) {
+        switch (data.event_type) {
+            case "new_window": 
+                createNewWindow();
+        }
+    }
+
+*/
+    let Desktop: WindowData[];
+
+    $: Desktop = $DesktopStore;
 
     let content: WindowContentData = {
         buttons: [{
@@ -29,18 +50,25 @@
             Position: {x: 50, y: 70},
             FontSize: 17,
             title: "testButton",
-    }]
+    }] 
     };
+
+    let id: number = 1;
+
+    function getId() {
+        return id++;
+    }
+
+    function add() {
+        DesktopStore.addWindow({id: getId(), content: content});
+    }
 </script>
   
 <div class="root">
-    <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={content}>
-
-    </Window>
-
-    <Window StartPosition={{clientX: 0, clientY: 0}} StartWindowHeight={200} StartWindowWidth={200} isResizable={false} getZindex={getZindex}>
-
-    </Window>
+    <button on:click={add}>add</button>
+    {#each Desktop as window (window.id)}
+    <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
+    {/each}
 </div>
   
 <style>
