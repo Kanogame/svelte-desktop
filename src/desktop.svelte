@@ -3,6 +3,7 @@
     import {Initialize} from "./api/start";
     import type {WindowContentData, Button, Text, WindowData} from "./utils/WindowTypes";
     import { DesktopStore } from './store/windowStore';
+    import WindowContent from './WindowContent.svelte';
     //import type {Event} from "./utils/EventTypes";
 
     let zIndex: number = 1;
@@ -33,10 +34,6 @@
     }
 
 */
-    let Desktop: WindowData[];
-
-    $: Desktop = $DesktopStore;
-
     let content: WindowContentData = {
         buttons: [{
             id: 1,
@@ -71,7 +68,7 @@
     }
 
     function change() {
-        let curwindow = $DesktopStore[+InpId].content;
+        let curwindow: WindowContentData = $DesktopStore.get(+InpId).content;
         curwindow.buttons.push({ id: 2,
             Position: {x: 70, y: 100},
             Height: 50,
@@ -86,7 +83,7 @@
     <input type="text" bind:value={InpId}/>
     <button on:click={remove}>remove</button>
     <button on:click={change}>change</button>
-    {#each Desktop as window (window.id)}
+    {#each [...$DesktopStore.values()] as window (window.id)}
     <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
     {/each}
 </div>

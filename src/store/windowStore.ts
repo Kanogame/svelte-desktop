@@ -34,8 +34,7 @@ function createDesktopStore() {
         subscribe: s.subscribe,
         addWindow: (val: WindowData) => s.update(v => v.set(val.id, val)),
         removeWindow: (Id: number) => s.update(v => new Map([...v].filter(([k, _]) => k != Id))),
-        changewindow: (Id: number, content: WindowContentData) => s.update(v => new Map([...v].map(([_, val]) => val = val.id == Id ? {id: val.id, content: content} : val))),
-        getWindowContent: (Id: number) => {return s.subscribe[Id]},
+        changewindow: (Id: number, content: WindowContentData) => s.update(v => v.set(Id, {id: Id, content: content})),
         //todo: clear, changeWindow
     }
 }
