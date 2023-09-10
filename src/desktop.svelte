@@ -69,12 +69,23 @@
     function add() {
         DesktopStore.addWindow({id: getId(), content: content});
     }
+
+    function change() {
+        let curwindow = $DesktopStore[+InpId].content;
+        curwindow.buttons.push({ id: 2,
+            Position: {x: 70, y: 100},
+            Height: 50,
+            Width: 40,
+            title: "testButton"});
+        DesktopStore.changewindow(+InpId, curwindow);
+    }
 </script>
   
 <div class="root">
     <button on:click={add}>add</button>
     <input type="text" bind:value={InpId}/>
     <button on:click={remove}>remove</button>
+    <button on:click={change}>change</button>
     {#each Desktop as window (window.id)}
     <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
     {/each}
