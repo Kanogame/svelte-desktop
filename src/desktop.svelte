@@ -4,20 +4,22 @@
     import type {WindowContentData, Button, Text, WindowData} from "./utils/WindowTypes";
     import { DesktopStore } from './store/windowStore';
     import WindowContent from './WindowContent.svelte';
-    //import type {Event} from "./utils/EventTypes";
+    import type {EventNewWindow} from "./utils/EventTypes";
 
     let zIndex: number = 1;
 
     function getZindex() {
     return zIndex++;
     }
-/*
+
     const socket = Initialize();
 
     socket.addEventListener("message", (e) => {
-        switch (e.data.type) {
+        console.log(e.data);
+        const message = JSON.parse(e.data);
+        switch (message.type) {
             case "event":
-                EventManager(e.data.payload);
+                EventManager(message.payload);
                 break;
         }
     });
@@ -26,14 +28,13 @@
         // todo send resolve
     }
 
-    function EventManager(data: Event) {
+    function EventManager(data: EventNewWindow) {
         switch (data.event_type) {
             case "new_window": 
-                createNewWindow();
+                DesktopStore.addWindow({id: getId(), content: data.payload.content});
         }
     }
 
-*/
     let content: WindowContentData = {
         buttons: [{
             id: 1,
