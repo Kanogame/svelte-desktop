@@ -17,7 +17,7 @@
     socket.addEventListener("message", (e) => {
         console.log(e.data);
         const message = JSON.parse(e.data);
-        switch (message.type) {
+        switch (message.message_type) {
             case "event":
                 EventManager(message.payload);
                 break;
@@ -28,10 +28,11 @@
         // todo send resolve
     }
 
-    function EventManager(data: EventNewWindow) {
+    function EventManager(data: any) {
         switch (data.event_type) {
             case "new_window": 
-                DesktopStore.addWindow({id: getId(), content: data.payload.content});
+                console.log(data.payload.window_content);
+                DesktopStore.addWindow({id: getId(), content: data.payload.window_content});
         }
     }
 
@@ -39,8 +40,7 @@
         buttons: [{
             id: 1,
             Position: {x: 20, y: 30},
-            Height: 30,
-            Width: 40,
+            Size: {height: 30,width: 40},
             title: "testButton",
         }],
         blocks: [{
@@ -72,8 +72,7 @@
         let curwindow: WindowContentData = $DesktopStore.get(+InpId).content;
         curwindow.buttons.push({ id: 2,
             Position: {x: 70, y: 100},
-            Height: 50,
-            Width: 40,
+            Size: {height: 40,width: 50},
             title: "testButton"});
         DesktopStore.changewindow(+InpId, curwindow);
     }

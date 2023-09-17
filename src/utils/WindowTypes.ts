@@ -56,8 +56,7 @@ export type WindowContentData = {
 export type Button = {
     id: number;
     Position: Point;
-    Height: number;
-    Width: number;
+    Size: Size;
     title: string;
 }
 

@@ -8,7 +8,7 @@
 <div class="window-content" style:height={`${windowResizeData.height}px`} style:width={`${windowResizeData.width}px`}>
     {#if Content}
     {#each Content.buttons as item}
-		<button class="window-el" style:width={`${item.Width}px`} style:height={`${item.Height}px`} 
+		<button class="window-el" style:width={`${item.Size.width}px`} style:height={`${item.Size.height}px`} 
         style:left={`${item.Position.x}px`} style:top={`${item.Position.y}px`}>{item.title}</button>
 	{/each}
 
