@@ -88,11 +88,11 @@ export function CalculateMinimalSize(Content: WindowContentData): Size {
     }
     let MaxWidht: number = Number.MIN_VALUE, MaxHeight: number = Number.MIN_VALUE;
     for (const el of Content.buttons) {
-        if (el.Width + el.Position.x > MaxWidht) {
-            MaxWidht = el.Width + el.Position.x; 
+        if (el.Size.width + el.Position.x > MaxWidht) {
+            MaxWidht = el.Size.width  + el.Position.x; 
         } 
-        if (el.Height + el.Position.y > MaxHeight) {
-            MaxHeight = el.Height + el.Position.y; 
+        if (el.Size.height + el.Position.y > MaxHeight) {
+            MaxHeight = el.Size.height + el.Position.y; 
         }
     }
     for (const el of Content.blocks) {
