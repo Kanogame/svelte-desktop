@@ -7,3 +7,7 @@ export function Initialize() : WebSocket {
     })
     return socket
 }
+
+export function SendJSON(socket: WebSocket, data: any) {
+    socket.send(JSON.stringify(data))
+}
