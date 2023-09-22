@@ -57,6 +57,7 @@ export type Button = {
     id: number;
     Position: Point;
     role: String;
+    clickable: boolean;
     Size: Size;
     title: string;
 }

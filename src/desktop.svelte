@@ -36,22 +36,6 @@
         }
     }
 
-    let content: WindowContentData = {
-        buttons: [{
-            id: 1,
-            Position: {x: 20, y: 30},
-            Size: {height: 30,width: 40},
-            role: "",
-            title: "testButton",
-        }],
-        blocks: [{
-            id: 2,
-            Position: {x: 50, y: 70},
-            FontSize: 17,
-            title: "testButton",
-    }] 
-    };
-
     let id: number = 1;
 
     let InpId: string;
@@ -63,10 +47,6 @@
     function remove() {
         console.log(+InpId);
         DesktopStore.removeWindow(+InpId);
-    }
-
-    function add() {
-        DesktopStore.addWindow({id: getId(), content: content});
     }
     /*
     function change() {
@@ -80,11 +60,10 @@
 </script>
   
 <div class="root">
-    <button on:click={add}>add</button>
     <input type="text" bind:value={InpId}/>
     <button on:click={remove}>remove</button>
     {#each [...$DesktopStore.values()] as window (window.id)}
-    <Window StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
+    <Window WindowId={window.id} EventSocket={socket} StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
     {/each}
 </div>
   

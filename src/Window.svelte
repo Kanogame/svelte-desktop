@@ -5,7 +5,10 @@
     import {ResizeState} from "./utils/WindowTypes";
     import WindowBar from "./WindowBar.svelte";
     import WindowContent from "./WindowContent.svelte";
+    import { EventButtonClick } from "./api/events";
 
+    export let WindowId: number;
+    export let EventSocket: WebSocket;
     export let StartWindowHeight: number;
     export let StartWindowWidth: number;
     export let StartPosition: BarMouseMoveData;
@@ -95,11 +98,14 @@
         windowPositionStore.set(startPosition.clientX, startPosition.clientY);
     }
 
+    function ButtonClick(role: any) {
+        EventButtonClick(EventSocket, role, WindowId);
+    }
 
 </script>
 <div aria-hidden="true" class="window" style:z-index={`${zIndex}`} style:left={`${$windowPositionStore.x}px`} style:top={`${$windowPositionStore.y}px`} style:cursor={`${$cursorStore.cursor}`} on:mousedown={windowResizeWindow}>
     <WindowBar on:mousedown={barMouseDown}/>
-    <WindowContent windowResizeData={$windowResizeStore} Content={Content}/>
+    <WindowContent on:buttonClick={ButtonClick} windowResizeData={$windowResizeStore} Content={Content}/>
 </div>
 
 <svelte:window on:mouseup={barMouseUp} on:mousemove={barMoveWindow} />
