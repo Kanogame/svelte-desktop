@@ -2,13 +2,12 @@
     import {createWindowPositionStore, createWindowResizeStore, createCursorStore} from "./store/windowStore";
     import type {BarMouseMoveData, Size, MouseMoveData, MouseClickData, WindowArgs, WindowContentData} from "./utils/WindowTypes";
     import {CheckWindowPadding, ResizeWindow, CalculateMinimalSize} from "./utils/Resize";
+    import { createEventDispatcher } from "svelte";
     import {ResizeState} from "./utils/WindowTypes";
     import WindowBar from "./WindowBar.svelte";
     import WindowContent from "./WindowContent.svelte";
-    import { EventButtonClick } from "./api/events";
 
     export let WindowId: number;
-    export let EventSocket: WebSocket;
     export let StartWindowHeight: number;
     export let StartWindowWidth: number;
     export let StartPosition: BarMouseMoveData;
@@ -98,8 +97,10 @@
         windowPositionStore.set(startPosition.clientX, startPosition.clientY);
     }
 
+    const dispatch = createEventDispatcher();
+
     function ButtonClick(role: any) {
-        EventButtonClick(EventSocket, role, WindowId);
+        dispatch("event", {eventType: "buttonClick", role: role.detail, windowId: WindowId});
     }
 
 </script>

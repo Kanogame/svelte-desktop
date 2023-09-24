@@ -4,7 +4,7 @@
     import type {WindowContentData, Button, Text, WindowData} from "./utils/WindowTypes";
     import { DesktopStore } from './store/windowStore';
     import WindowContent from './WindowContent.svelte';
-    import type {EventNewWindow} from "./utils/EventTypes";
+    import { EventButtonClick } from "./api/events";
 
     let zIndex: number = 1;
 
@@ -12,7 +12,7 @@
     return zIndex++;
     }
 
-    const socket = Initialize();
+    const {UUID, socket} = Initialize();
 
     socket.addEventListener("message", (e) => {
         console.log(e.data);
@@ -33,6 +33,15 @@
             case "new_window": 
                 console.log(data.payload.window_content);
                 DesktopStore.addWindow({id: getId(), content: data.payload.window_content});
+        }
+    }
+
+    function windowEventHandler(role: any) {
+        const eventData = role.detail;
+        switch (eventData.eventType) {
+            case "buttonClick":
+                EventButtonClick(socket, eventData.role, eventData.windowId, UUID);
+                break;
         }
     }
 
@@ -63,7 +72,7 @@
     <input type="text" bind:value={InpId}/>
     <button on:click={remove}>remove</button>
     {#each [...$DesktopStore.values()] as window (window.id)}
-    <Window WindowId={window.id} EventSocket={socket} StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
+    <Window on:event={windowEventHandler} WindowId={window.id} StartPosition={{clientX: 100, clientY: 100}} StartWindowHeight={400} StartWindowWidth={200} isResizable={true} getZindex={getZindex} Content={window.content}/>
     {/each}
 </div>
   
